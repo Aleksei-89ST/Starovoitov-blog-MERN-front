@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import SimpleMDE from 'react-simplemde-editor';
+import { Link } from "react-router-dom";
 
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
@@ -62,9 +63,9 @@ export const AddPost = () => {
         <Button size="large" variant="contained">
           Опубликовать
         </Button>
-        <a href="/">
+        <Link to="/">
           <Button size="large">Отмена</Button>
-        </a>
+        </Link>
       </div>
     </Paper>
   );
