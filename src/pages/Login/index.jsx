@@ -27,9 +27,16 @@ export const Login = () => {
     // обьясняю что валидация будет происходить если же эти поля поменялись
     mode: 'onChange',
   });
-  // функция котороя будет выполнятся только если react-hook-form понял что валидация прошла успешно
-  const onSubmit = (values) => {
-    dispatch(fetchAuth(values));
+  // onSubmit будет выполнятся только если react-hook-form понял что валидация прошла успешно
+  const onSubmit = async (values) => {
+    const data = await dispatch(fetchAuth(values));
+    if (!data.payload) {
+      return  alert('Не удалось авторизоваться!')
+    }
+    // при успешном входе сохраняю токен
+   if('token' in data.payload) {
+    window.localStorage.setItem('token', data.payload.token);
+   }; 
   };
 
 if (isAuth) {
