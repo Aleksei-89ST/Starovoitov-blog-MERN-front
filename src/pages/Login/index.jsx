@@ -3,12 +3,15 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 import { useForm } from "react-hook-form";
+import { fetchAuth, selectIsAuth } from "../../redux/slices/auth";
+import { Navigate } from "react-router-dom";
 import styles from "./Login.module.scss";
-import { fetchAuth } from "../../redux/slices/auth";
 
 export const Login = () => {
+  // обьяснение авторизован или нет пользователь
+  const isAuth = useSelector(selectIsAuth)
   const dispatch = useDispatch()
   // вытаскиваю функции из react-hook-form
   const {
@@ -28,6 +31,10 @@ export const Login = () => {
   const onSubmit = (values) => {
     dispatch(fetchAuth(values));
   };
+
+if (isAuth) {
+  return <Navigate to='/' />;
+}
 
   return (
     <Paper classes={{ root: styles.root }}>
