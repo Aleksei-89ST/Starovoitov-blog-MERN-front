@@ -20,8 +20,8 @@ export const Login = () => {
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      email: "alfred@test.ru",
+      password: "123456",
     },
     // обьясняю что валидация будет происходить если же эти поля поменялись
     mode: 'onChange',
