@@ -1,7 +1,6 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Navigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { fetchRegister } from "../../redux/slices/auth";
 import Button from "@mui/material/Button";
