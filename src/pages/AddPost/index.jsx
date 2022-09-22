@@ -1,9 +1,15 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import SimpleMDE from "react-simplemde-editor";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "../../axios";
 // библиотека на которой сделан редактор статей
 import "easymde/dist/easymde.min.css";
@@ -12,6 +18,7 @@ import { useSelector } from "react-redux";
 import { selectIsAuth } from "../../redux/slices/auth";
 
 export const AddPost = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   const [isLoading, setLoading] = useState(false);
@@ -20,6 +27,8 @@ export const AddPost = () => {
   const [tags, setTags] = useState("");
   const inputFileRef = useRef(null);
   const [imageUrl, setImageUrl] = useState("");
+
+  const isEditing = Boolean(id);
 
   // formData специальный формат чтобы вшить картинку и отправить в бэкенд
   const handleChangeFile = async (event) => {
@@ -42,6 +51,23 @@ export const AddPost = () => {
 
   const onChange = useCallback((value) => {
     setText(value);
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`/posts/${id}`)
+        .then(({ data }) => {
+          setTitle(data.title);
+          setText(data.text);
+          setTags(data.tags.join(","));
+          setImageUrl(data.imageUrl);
+        })
+        .catch((error) => {
+          console.warn(error);
+          alert("Ошибка при получении статьи");
+        });
+    }
   }, []);
 
   const options = useMemo(
@@ -72,9 +98,11 @@ export const AddPost = () => {
         tags,
         text,
       };
-      const { data } = await axios.post("/posts", fields);
-      const id = data._id;
-      navigate(`/posts/${id}`);
+      const { data } = isEditing
+        ? await axios.patch(`/posts/${id}`, fields)
+        : await axios.post("/posts", fields);
+      const _id = isEditing ? id : data._id;
+      navigate(`/posts/${_id}`);
     } catch (error) {
       console.warn(error);
       alert("Ошибка при создании статьи!");
@@ -140,7 +168,7 @@ export const AddPost = () => {
       />
       <div className={styles.buttons}>
         <Button onClick={onSubmit} size="large" variant="contained">
-          Опубликовать
+          {isEditing ? "Сохранить" : "Опубликовать"}
         </Button>
         <Link to="/">
           <Button size="large">Отмена</Button>
