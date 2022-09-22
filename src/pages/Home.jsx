@@ -30,9 +30,9 @@ export const Home = () => {
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
-          {(isPostLoading ? [...Array(5)] : posts.items).map((obj, index) =>
+          {(isPostLoading ? [...Array(5)] : posts.items).map((obj, i) =>
             isPostLoading ? (
-              <Post key={index} isLoading={true}/>
+              <Post key={i} isLoading={true}/>
             ) : (
               <Post
                 id={obj._id}
